@@ -57,3 +57,9 @@ lab3_anikin_cpu/test_mat.c
 lab3_anikin_cpu/test_mat.h
 lab3_anikin_cpu/main_copy.c
 lab3_anikin_cpu/tests.c
+lab3_anikin_cpu/savelu.c
+*.txt
+*.py
+*.gz
+.vscode/
+lab3_anikin_gpu/gen_diff.py
