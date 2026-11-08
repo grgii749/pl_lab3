@@ -53,3 +53,7 @@ dkms.conf
 
 # debug information files
 *.dwo
+lab3_anikin_cpu/test_mat.c
+lab3_anikin_cpu/test_mat.h
+lab3_anikin_cpu/main_copy.c
+lab3_anikin_cpu/tests.c

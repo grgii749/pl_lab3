@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "LU.h"
+//#include "test_mat.h"
 
 int main(int argc, char *argv[]){
     if (argc<3){
@@ -12,33 +13,25 @@ int main(int argc, char *argv[]){
     if (!f){
         return 1;
     }
+    //double *mat=dif2(matrix_size,matrix_size);
+    double **matrix_A=get_A(matrix_size);
     
-    int **matrix_A=get_A(matrix_size);
-    int **matrix_U=get_U(matrix_size);
-    int **matrix_L=get_L(matrix_size);
+    double **matrix_U=get_U(matrix_size);
+    
+    double **matrix_L=get_L(matrix_size);
     parse_start_matrix(matrix_size,matrix_A,matrix_U,f);
-    int *rhs=get_b(matrix_size,f);
-    for (int i=0;i<matrix_size;i++){
-        printf("%d ",rhs[i]);
-    }
-    lu(matrix_size,matrix_U,matrix_L);
-    
-    
-    
-    for (int i=0;i<matrix_size;i++){
-        for (int j=0;j<matrix_size;j++){
-            printf("%d ",matrix_U[i][j]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-    for (int i=0;i<matrix_size;i++){
-        for (int j=0;j<matrix_size;j++){
-            printf("%d ",matrix_L[i][j]);
-        }
-        printf("\n");
-    }
 
+    double *rhs=get_b(matrix_size,f);
+    
+    int *perm =malloc(matrix_size*sizeof(int));
+    lu(matrix_size,matrix_U,matrix_L,perm);
+    double *result=solve_sle(matrix_size,matrix_U,matrix_L,rhs,perm);
+    for (int i=0;i<matrix_size;i++){
+        printf("%g ",result[i]);
+    }
+    
+    
+    free(result);
     free(rhs);
     for (int i=0;i<matrix_size;i++){
         free(matrix_L[i]);
