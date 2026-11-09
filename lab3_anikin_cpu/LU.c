@@ -131,7 +131,7 @@ double * solve_sle(int matrix_size,double ** matrix_U,double** matrix_L,double *
         for (int j=0;j<i;j++){
             sum=sum-matrix_L[i][j]*y[j];
         }
-        y[i]=sum/matrix_L[i][i];
+        y[i]=sum/matrix_L[i][i];;
     }
     for (int i=matrix_size-1;i>=0;i--){
         double sum=y[i];

@@ -3,37 +3,53 @@
 #include <time.h>
 #include "LU.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     if (argc < 3) {
-        printf("Usage: %s <n> <matrix_file>\n", argv[0]);
+        
         return 1;
     }
-    int matrix_size = atoi(argv[1]);
-    FILE *f = fopen(argv[2], "r");
-    if (!f) { printf("Cannot open %s\n", argv[2]); return 1; }
+    FILE* f = fopen(argv[2], "r");
+    if (!f) { return 1; }
+    fclose(f); 
 
-    double **matrix_A = get_A(matrix_size);
-    double **matrix_U = get_U(matrix_size);
-    double **matrix_L = get_L(matrix_size);
-    parse_start_matrix(matrix_size, matrix_A, matrix_U, f);
+    for (int matrix_size=100; matrix_size<20000; matrix_size*=2) {
+        float* mat = dif2(matrix_size, matrix_size);
+        float** matrix_U = dif2_to_matrix(matrix_size, mat); 
+        float** matrix_L = get_L(matrix_size);               
+        
+        float* rhs = malloc(matrix_size * sizeof(float));
+        rhs[0] = 1.0f;
+        rhs[matrix_size - 1] = 1.0f;
+        for (int i = 1; i < matrix_size - 1; i++) {
+            rhs[i] = 0.0f;
+        }
 
-    double *rhs = get_b(matrix_size, f);
-    int *perm = malloc(matrix_size * sizeof(int));
-    clock_t t1=clock();
-    lu(matrix_size, matrix_U, matrix_L, perm);
-    clock_t t2=clock();
-    double res=(double)(t2-t1)/CLOCKS_PER_SEC;
-    printf("lu time%lf",res);
-    double *result = solve_sle(matrix_size, matrix_U, matrix_L, rhs, perm);
+        int* perm = malloc(matrix_size * sizeof(int));
 
-    //for (int i = 0; i < matrix_size; i++) printf("%g ", result[i]);
-    printf("\n");
-    
-    free(result);
-    free(rhs);
-    free(perm);
-    for (int i = 0; i < matrix_size; i++) { free(matrix_L[i]); free(matrix_U[i]); free(matrix_A[i]); }
-    free(matrix_L); free(matrix_U); free(matrix_A);
-    fclose(f);
+        clock_t t1 = clock();
+        lu(matrix_size, matrix_U, matrix_L, perm);
+        clock_t t2 = clock();
+        double res = (double)(t2 - t1) / CLOCKS_PER_SEC; 
+
+        printf("n=%d lu time=%g s\n", matrix_size, res);
+
+        float* result = solve_sle(matrix_size, matrix_U, matrix_L, rhs, perm);
+        // for (int i=0;i<matrix_size;i++){
+        //     printf("%g ",result[i]);
+        // }
+ 
+        free(result);
+        free(rhs);
+        free(perm);
+        free(mat); 
+
+        for (int i = 0; i < matrix_size; i++) {
+            free(matrix_L[i]);
+            free(matrix_U[i]);
+        }
+        free(matrix_L);
+        free(matrix_U);
+    }
+
     return 0;
 }

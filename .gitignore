@@ -74,3 +74,4 @@ lab3_anikin_gpu/08-singular-pivot-bounds.patch
 lab3_anikin_gpu/LU_EXP.c
 lab3_anikin_gpu/savelu.c
 tests/
+lab3_anikin_gpu/gpu/main_with_file.c
