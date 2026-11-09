@@ -63,3 +63,14 @@ lab3_anikin_cpu/savelu.c
 *.gz
 .vscode/
 lab3_anikin_gpu/gen_diff.py
+lab3_anikin_gpu/01-coalesced-update-u.patch
+lab3_anikin_gpu/02-pivot-on-gpu.patch
+lab3_anikin_gpu/03-packed-lu-flat-matrices.patch
+lab3_anikin_gpu/04-gpu-profiling.patch
+lab3_anikin_gpu/05-error-handling.patch
+lab3_anikin_gpu/06-benchmark-driver.patch
+lab3_anikin_gpu/07-validation-and-residual.patch
+lab3_anikin_gpu/08-singular-pivot-bounds.patch
+lab3_anikin_gpu/LU_EXP.c
+lab3_anikin_gpu/savelu.c
+tests/

@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define CL_USE_DEPRECATED_OPENCL_1_2_APIS 
 #define CL_TARGET_OPENCL_VERSION 200
 #include <CL/cl.h>
 #include <stdio.h>
@@ -126,12 +128,9 @@ void lu(int matrix_size, double **matrix_U, double **matrix_L, int *perm) {
     }
 
     cl_int err;
-    cl_mem u_buf   = clCreateBuffer(g_ctx, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-                                    mat_bytes, u_flat, &err);
-    cl_mem l_buf   = clCreateBuffer(g_ctx, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,
-                                    mat_bytes, l_flat, &err);
-    cl_mem col_buf = clCreateBuffer(g_ctx, CL_MEM_READ_WRITE,
-                                    (size_t)n * sizeof(double), NULL, &err);
+    cl_mem u_buf   = clCreateBuffer(g_ctx, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,mat_bytes, u_flat, &err);
+    cl_mem l_buf   = clCreateBuffer(g_ctx, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR,mat_bytes, l_flat, &err);
+    cl_mem col_buf = clCreateBuffer(g_ctx, CL_MEM_READ_WRITE,(size_t)n * sizeof(double), NULL, &err);
     if (err != CL_SUCCESS) {
         fprintf(stderr, "clCreateBuffer failed\n");
         if (u_buf)   clReleaseMemObject(u_buf);
@@ -143,8 +142,6 @@ void lu(int matrix_size, double **matrix_U, double **matrix_L, int *perm) {
     double t_read = 0, t_kL = 0, t_kU = 0, t_kcol = 0;
     for (int k = 0; k < n; k++) {
         int ncol = n - k;
-
-
         size_t gsize_col = (size_t)ncol;
         clSetKernelArg(g_k_col, 0, sizeof(cl_mem), &u_buf);
         clSetKernelArg(g_k_col, 1, sizeof(int),    &n);
@@ -175,7 +172,9 @@ void lu(int matrix_size, double **matrix_U, double **matrix_L, int *perm) {
             clSetKernelArg(g_k_swap, 4, sizeof(int),    &pivot);
             clEnqueueNDRangeKernel(g_queue, g_k_swap, 1, NULL, &gsize, NULL, 0, NULL, NULL);
 
-            int t = perm[k]; perm[k] = perm[pivot]; perm[pivot] = t;
+            int t = perm[k]; 
+            perm[k] = perm[pivot]; 
+            perm[pivot] = t;
         }
 
         if (n - k - 1 > 0) {
@@ -212,7 +211,9 @@ void lu(int matrix_size, double **matrix_U, double **matrix_L, int *perm) {
     clReleaseMemObject(u_buf);
     clReleaseMemObject(l_buf);
     clReleaseMemObject(col_buf);
-    free(u_flat); free(l_flat); free(col_h);
+    free(u_flat); 
+    free(l_flat); 
+    free(col_h);
 }
 
 

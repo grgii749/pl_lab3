@@ -76,11 +76,6 @@ void parse_start_matrix(int matrix_size,double **start_matrix,double **matrix_U,
 
 void lu(int matrix_size,double ** matrix_U,double** matrix_L,int *perm){
     for (int i = 0; i < matrix_size; i++) perm[i] = i;
-
-    
-
-
-
     for (int k=0;k<matrix_size;k++){
         int pivot = k;
         double maxabs = fabs(matrix_U[k][k]);
